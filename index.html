@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Produtos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Produtos Disponíveis</h1>
+        <button id="carregarProdutos">Carregar Produtos</button>
+        <div id="produtos" class="grade-produtos"></div>
+    </div>
+
+    <script>
+        const url = 'https://dummyjson.com/products';
+
+        async function buscarProdutos() {
+            try {
+                const resposta = await fetch(url);
+                
+                if (resposta.status === 200) {
+                    const dados = await resposta.json();
+                    exibirProdutos(dados.products);
+                } else {
+                    console.error('Erro na requisição:', resposta.status);
+                }
+            } catch (erro) {
+                console.error('Erro ao buscar produtos:', erro);
+            }
+        }
+
+        function exibirProdutos(produtos) {
+            const contenedorProdutos = document.getElementById('produtos');
+            contenedorProdutos.innerHTML = ""; // Limpa o contêiner antes de adicionar os produtos
+            produtos.forEach(produto => {
+                const elementoProduto = document.createElement('div');
+                elementoProduto.classList.add('produto');
+                elementoProduto.innerHTML = `
+                    <h2>${produto.title}</h2>
+                    <p>${produto.description}</p>
+                    <p><strong>Preço:</strong> $${produto.price}</p>
+                `;
+                contenedorProdutos.appendChild(elementoProduto);
+            });
+        }
+
+        document.getElementById('carregarProdutos').addEventListener('click', buscarProdutos);
+    </script>
+</body>
+</html>
